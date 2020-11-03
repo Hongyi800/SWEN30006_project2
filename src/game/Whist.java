@@ -75,6 +75,8 @@ public class Whist extends CardGame {
   private Location hideLocation = new Location(-500, - 500);
   private Location trumpsActorLocation = new Location(50, 50);
   private boolean enforceRules=false;
+  private PlayerFactory playerFactory;
+  private Player player;
 
    // TODO: read properties
    public final int nbPlayers = 4;
@@ -156,8 +158,7 @@ private Optional<Integer> playRound() {  // Returns winner, if any
 	int winner;
 	Card winningCard;
 	Suit lead;
-	PlayerFactory playerFactory = new PlayerFactory();
-	Player player;
+	playerFactory = new PlayerFactory();
 	int nextPlayer = random.nextInt(nbPlayers); // randomly select player to lead for this round
 	for (int i = 0; i < nbStartCards; i++) {
 		trick = new Hand(deck);
