@@ -88,6 +88,11 @@ public class Whist extends CardGame {
   	setStatusText(string);
   }
 
+  // read properties
+
+
+
+
 private int[] scores = new int[nbPlayers];
 
 Font bigFont = new Font("Serif", Font.BOLD, 36);
