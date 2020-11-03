@@ -1,5 +1,5 @@
 package game;
 
-public class SelectSmartFactory {
+public class SelectSmartFactory implements ISelectStrategy {
 
 }

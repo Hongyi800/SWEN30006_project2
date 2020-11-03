@@ -1,5 +1,5 @@
 package game;
 
-public class FilterTrumpSavingStrategy {
+public class FilterTrumpSavingStrategy implements IFilterStrategy {
 
 }

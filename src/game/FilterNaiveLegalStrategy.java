@@ -1,5 +1,5 @@
 package game;
 
-public class FilterNaiveLegalStrategy {
+public class FilterNaiveLegalStrategy implements IFilterStrategy {
 
 }

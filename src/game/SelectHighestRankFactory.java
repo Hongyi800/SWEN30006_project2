@@ -1,5 +1,4 @@
 package game;
 
-public class SelectHighestRankFactory {
-
+public class SelectHighestRankFactory implements ISelectStrategy {
 }

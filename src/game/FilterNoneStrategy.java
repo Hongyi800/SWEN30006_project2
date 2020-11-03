@@ -1,5 +1,5 @@
 package game;
 
-public class FilterNoneStrategy {
+public class FilterNoneStrategy implements IFilterStrategy {
 
 }
