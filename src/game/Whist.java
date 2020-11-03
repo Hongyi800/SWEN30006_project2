@@ -33,14 +33,14 @@ public class Whist extends CardGame {
       return clazz.getEnumConstants()[x];
   }
 
-  // TODO: no filter , random selection
+  // TODO: no filter , random selection  move to SelectRandom
   // return random Card from Hand
   public static Card randomCard(Hand hand){
       int x = random.nextInt(hand.getNumberOfCards());
       return hand.get(x);
   }
 
-  // TODO: list after filtering, random selection
+  // TODO: list after filtering, random selection move to SelectRandom
   // return random Card from ArrayList
   public static Card randomCard(ArrayList<Card> list){
       int x = random.nextInt(list.size());
@@ -51,13 +51,7 @@ public class Whist extends CardGame {
 	  return card1.getRankId() < card2.getRankId(); // Warning: Reverse rank order of cards (see comment on enum)
   }
 
-
   private final String version = "1.0";
-	// TODO: read properties
-  public final int nbPlayers = 4;
-  public final int nbStartCards = 13;
-  public final int winningScore = 24;
-	//
   private final int handWidth = 400;
   private final int trickWidth = 40;
   private final Deck deck = new Deck(Suit.values(), Rank.values(), "cover");
@@ -81,6 +75,12 @@ public class Whist extends CardGame {
   private Location hideLocation = new Location(-500, - 500);
   private Location trumpsActorLocation = new Location(50, 50);
   private boolean enforceRules=false;
+
+   // TODO: read properties
+   public final int nbPlayers = 4;
+   public final int nbStartCards = 13;
+   public final int winningScore = 24;
+   //
 
   public void setStatus(String string) {
   	setStatusText(string);
@@ -157,23 +157,30 @@ private Optional<Integer> playRound() {  // Returns winner, if any
 	Card winningCard;
 	Suit lead;
 	PlayerFactory playerFactory = new PlayerFactory();
+	Player player;
 	int nextPlayer = random.nextInt(nbPlayers); // randomly select player to lead for this round
 	for (int i = 0; i < nbStartCards; i++) {
 		trick = new Hand(deck);
     	selected = null;
         if (0 == nextPlayer) {  // Select lead depending on player type
-        	
+			player = PlayerFactory.createPlayer("interactive");
     		hands[0].setTouchEnabled(true);
     		setStatus("Player 0 double-click on card to lead.");
     		while (null == selected) delay(100);
         } else {
 			//TODO: check if advanced NPC
-        	player = new NormalNPC();
+			if (!ifAdvanced) {
+				// normal NPC
+				player = PlayerFactory.createPlayer("normal"); // TODO: randomCard(hands[nextPlayer]);
+			} else {
+				// advanced NPC
+				player = PlayerFactory.createPlayer("advanced", filterType, selectType);
+			}
+
     		setStatusText("Player " + nextPlayer + " thinking...");
             delay(thinkingTime);
-			//TODO: add selection and filter here
-            selected = randomCard(hands[nextPlayer]);
-
+			// selected the card after selection and filter
+            selected = player.getSelected();  //TODO: write  Card getSelected()  in advancedNPC, Factory can create new strategy and find the card
         }
         // Lead with selected card
 	        trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards()+2)*trickWidth));
@@ -191,14 +198,24 @@ private Optional<Integer> playRound() {  // Returns winner, if any
 			if (++nextPlayer >= nbPlayers) nextPlayer = 0;  // From last back to first
 			selected = null;
 	        if (0 == nextPlayer) {
+				player = PlayerFactory.createPlayer("interactive");
 	    		hands[0].setTouchEnabled(true);
 	    		setStatus("Player 0 double-click on card to follow.");
 	    		while (null == selected) delay(100);
 	        } else {
-		        setStatusText("Player " + nextPlayer + " thinking...");
-		        delay(thinkingTime);
-				//TODO: add selection and filter here
-		        selected = randomCard(hands[nextPlayer]);
+				//TODO: check if advanced NPC
+				if (!ifAdvanced) {
+					// normal NPC
+					player = PlayerFactory.createPlayer("normal"); // TODO: randomCard(hands[nextPlayer]);
+				} else {
+					// advanced NPC
+					player = PlayerFactory.createPlayer("advanced", filterType, selectType);
+				}
+
+				setStatusText("Player " + nextPlayer + " thinking...");
+				delay(thinkingTime);
+				// selected the card after selection and filter
+				selected = player.getSelected();  //TODO: write  Card getSelected()  in advancedNPC, Factory can create new strategy and find the card
 	        }
 	        // Follow with selected card
 		        trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards()+2)*trickWidth));
