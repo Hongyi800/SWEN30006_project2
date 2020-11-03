@@ -39,6 +39,7 @@ public class Whist extends CardGame {
       int x = random.nextInt(hand.getNumberOfCards());
       return hand.get(x);
   }
+
   // TODO: list after filtering, random selection
   // return random Card from ArrayList
   public static Card randomCard(ArrayList<Card> list){
@@ -85,7 +86,6 @@ public class Whist extends CardGame {
   	setStatusText(string);
   }
 
-// TODO: move to player
 private int[] scores = new int[nbPlayers];
 
 Font bigFont = new Font("Serif", Font.BOLD, 36);
@@ -103,9 +103,7 @@ private void updateScore(int player) {
 	scoreActors[player] = new TextActor(String.valueOf(scores[player]), Color.WHITE, bgColor, bigFont);
 	addActor(scoreActors[player], scoreLocations[player]);
 }
-// TODO: move to player
 
-// TODO: move to ShuffleCard
 private Card selected;
 
 private void initRound() {
@@ -129,27 +127,25 @@ private void initRound() {
 	      hands[i].setTargetArea(new TargetArea(trickLocation));
 	      hands[i].draw();
 	    }
-	    
+
 //	    for (int i = 1; i < nbPlayers; i++)  // This code can be used to visually hide the cards in a hand (make them face down)
 //	      hands[i].setVerso(true);
 	    // End graphics
  }
-// TODO: move to ShuffleCard
+
+//// TODO: move to player
+//private String printHand(ArrayList<Card> cards) {
+//	String out = "";
+//	for(int i = 0; i < cards.size(); i++) {
+//		out += cards.get(i).toString();
+//		if(i < cards.size()-1) out += ",";
+//	}
+//	return(out);
+//}
+//// TODO: move to player
 
 
-// TODO: move to player
-private String printHand(ArrayList<Card> cards) {
-	String out = "";
-	for(int i = 0; i < cards.size(); i++) {
-		out += cards.get(i).toString();
-		if(i < cards.size()-1) out += ",";
-	}
-	return(out);
-}
-// TODO: move to player
 
-
-// TODO: move to ShuffleCard
 private Optional<Integer> playRound() {  // Returns winner, if any
 	// Select and display trump suit
 		final Suit trumps = randomEnum(Suit.class);
@@ -160,19 +156,24 @@ private Optional<Integer> playRound() {  // Returns winner, if any
 	int winner;
 	Card winningCard;
 	Suit lead;
+	PlayerFactory playerFactory = new PlayerFactory();
 	int nextPlayer = random.nextInt(nbPlayers); // randomly select player to lead for this round
 	for (int i = 0; i < nbStartCards; i++) {
 		trick = new Hand(deck);
     	selected = null;
         if (0 == nextPlayer) {  // Select lead depending on player type
+        	
     		hands[0].setTouchEnabled(true);
     		setStatus("Player 0 double-click on card to lead.");
     		while (null == selected) delay(100);
         } else {
+			//TODO: check if advanced NPC
+        	player = new NormalNPC();
     		setStatusText("Player " + nextPlayer + " thinking...");
             delay(thinkingTime);
+			//TODO: add selection and filter here
             selected = randomCard(hands[nextPlayer]);
-            //TODO: add selection and filter here
+
         }
         // Lead with selected card
 	        trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards()+2)*trickWidth));
@@ -184,7 +185,7 @@ private Optional<Integer> playRound() {  // Returns winner, if any
 			winner = nextPlayer;
 			winningCard = selected;
 			System.out.println("New trick: Lead Player = "+nextPlayer+", Lead suit = "+selected.getSuit()+", Trump suit = "+trumps);
-			System.out.println("Player "+nextPlayer+" play: "+selected.toString()+" from ["+printHand(hands[nextPlayer].getCardList())+"]");
+			System.out.println("Player "+nextPlayer+" play: "+selected.toString()+" from [" + player.printHand(hands[nextPlayer].getCardList())+"]");
 		// End Lead
 		for (int j = 1; j < nbPlayers; j++) {
 			if (++nextPlayer >= nbPlayers) nextPlayer = 0;  // From last back to first
@@ -196,6 +197,7 @@ private Optional<Integer> playRound() {  // Returns winner, if any
 	        } else {
 		        setStatusText("Player " + nextPlayer + " thinking...");
 		        delay(thinkingTime);
+				//TODO: add selection and filter here
 		        selected = randomCard(hands[nextPlayer]);
 	        }
 	        // Follow with selected card
@@ -207,19 +209,19 @@ private Optional<Integer> playRound() {  // Returns winner, if any
 						 // Rule violation
 						 String violation = "Follow rule broken by player " + nextPlayer + " attempting to play " + selected;
 						 //System.out.println(violation);
-						 if (enforceRules) 
+						 if (enforceRules)
 							 try {
 								 throw(new BrokeRuleException(violation));
 								} catch (BrokeRuleException e) {
 									e.printStackTrace();
 									System.out.println("A cheating player spoiled the game!");
 									System.exit(0);
-								}  
+								}
 					 }
 				// End Check
 				 selected.transfer(trick, true); // transfer to trick (includes graphic effect)
 				 System.out.println("Winning card: "+winningCard.toString());
-				 System.out.println("Player "+nextPlayer+" play: "+selected.toString()+" from ["+printHand(hands[nextPlayer].getCardList())+"]");
+				 System.out.println("Player "+nextPlayer+" play: "+selected.toString()+" from ["+ player.printHand(hands[nextPlayer].getCardList())+"]");
 				 if ( // beat current winner with higher card
 					 (selected.getSuit() == winningCard.getSuit() && rankGreater(selected, winningCard)) ||
 					  // trumped when non-trump was winning
@@ -231,7 +233,7 @@ private Optional<Integer> playRound() {  // Returns winner, if any
 		}
 		delay(600);
 		trick.setView(this, new RowLayout(hideLocation, 0));
-		trick.draw();		
+		trick.draw();
 		nextPlayer = winner;
 		System.out.println("Winner: "+winner);
 		setStatusText("Player " + nextPlayer + " wins trick.");
@@ -242,8 +244,6 @@ private Optional<Integer> playRound() {  // Returns winner, if any
 	removeActor(trumpsActor);
 	return Optional.empty();
 }
-// TODO: move to ShuffleCard
-
 
   public Whist()
   {

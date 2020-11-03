@@ -9,16 +9,16 @@ public abstract class Player {
 	private Card select;
 	private int id;
 	private int type;
-	
+
 	public Card takeTurn() {
 		return select;
 	}
-	
+
 	public void printState() {
 		System.out.println("Player "+getId()+" play: "+getSelect().toString()+" from ["+printHand(hands[getId()].getCardList())+"]");
 	}
 
-	private String printHand(ArrayList<Card> cards) {
+	public String printHand(ArrayList<Card> cards) {
 		String out = "";
 		for(int i = 0; i < cards.size(); i++) {
 			out += cards.get(i).toString();
@@ -26,7 +26,7 @@ public abstract class Player {
 		}
 		return(out);
 	}
-	
+
 	//get and set select card
 	public Card getSelect() {
 		return select;
@@ -34,7 +34,7 @@ public abstract class Player {
 	public void setSelect(Card select) {
 		this.select = select;
 	}
-	
+
 	//get and set player id
 	public int getId() {
 		return id;
@@ -43,7 +43,7 @@ public abstract class Player {
 		this.id = id;
 	}
 
-	
+
 	//get and set hand
 	public Hand[] getHands() {
 		return hands;
@@ -64,6 +64,6 @@ public abstract class Player {
 	public void setType(int type) {
 		this.type = type;
 	}
-	
-	
+
+
 }
