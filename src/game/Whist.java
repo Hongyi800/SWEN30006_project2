@@ -80,8 +80,8 @@ public class Whist extends CardGame {
 
    // TODO: read properties
    public final int nbPlayers = 4;
-   public final int nbStartCards = 13;
-   public final int winningScore = 24;
+   public final int nbStartCards = 6;
+   public final int winningScore = 2;
    //
 
   public void setStatus(String string) {
@@ -150,32 +150,37 @@ private void initRound() {
 
 private Optional<Integer> playRound() {  // Returns winner, if any
 	// Select and display trump suit
-		final Suit trumps = randomEnum(Suit.class);
-		final Actor trumpsActor = new Actor("sprites/"+trumpImage[trumps.ordinal()]);
-	    addActor(trumpsActor, trumpsActorLocation);
+	final Suit trumps = randomEnum(Suit.class);
+	final Actor trumpsActor = new Actor("sprites/"+trumpImage[trumps.ordinal()]);
+	addActor(trumpsActor, trumpsActorLocation);
 	// End trump suit
 	Hand trick;
 	int winner;
 	Card winningCard;
 	Suit lead;
 	playerFactory = new PlayerFactory();
+	Player player = null;
+	//TODO: add filter and select type
+	int filterType = 0, selectType=0;
+	Boolean ifAdvanced = false;
+
 	int nextPlayer = random.nextInt(nbPlayers); // randomly select player to lead for this round
 	for (int i = 0; i < nbStartCards; i++) {
 		trick = new Hand(deck);
     	selected = null;
         if (0 == nextPlayer) {  // Select lead depending on player type
-			player = PlayerFactory.createPlayer("interactive");
-    		hands[0].setTouchEnabled(true);
+			player = playerFactory.createPlayer("interactive",filterType, selectType, hands[nextPlayer]);
+			hands[0].setTouchEnabled(true);
     		setStatus("Player 0 double-click on card to lead.");
     		while (null == selected) delay(100);
         } else {
 			//TODO: check if advanced NPC
 			if (!ifAdvanced) {
 				// normal NPC
-				player = PlayerFactory.createPlayer("normal"); // TODO: randomCard(hands[nextPlayer]);
+				player = playerFactory.createPlayer("normal", filterType, selectType, hands[nextPlayer]); // TODO: randomCard(hands[nextPlayer]);
 			} else {
 				// advanced NPC
-				player = PlayerFactory.createPlayer("advanced", filterType, selectType);
+				player = playerFactory.createPlayer("advanced", filterType, selectType, hands[nextPlayer]);
 			}
 
     		setStatusText("Player " + nextPlayer + " thinking...");
@@ -199,7 +204,7 @@ private Optional<Integer> playRound() {  // Returns winner, if any
 			if (++nextPlayer >= nbPlayers) nextPlayer = 0;  // From last back to first
 			selected = null;
 	        if (0 == nextPlayer) {
-				player = PlayerFactory.createPlayer("interactive");
+				player = playerFactory.createPlayer("interactive",filterType, selectType, hands[nextPlayer]);
 	    		hands[0].setTouchEnabled(true);
 	    		setStatus("Player 0 double-click on card to follow.");
 	    		while (null == selected) delay(100);
@@ -207,10 +212,10 @@ private Optional<Integer> playRound() {  // Returns winner, if any
 				//TODO: check if advanced NPC
 				if (!ifAdvanced) {
 					// normal NPC
-					player = PlayerFactory.createPlayer("normal"); // TODO: randomCard(hands[nextPlayer]);
+					player = playerFactory.createPlayer("normal",filterType, selectType, hands[nextPlayer]); // TODO: randomCard(hands[nextPlayer]);
 				} else {
 					// advanced NPC
-					player = PlayerFactory.createPlayer("advanced", filterType, selectType);
+					player = playerFactory.createPlayer("advanced", filterType, selectType, hands[nextPlayer]);
 				}
 
 				setStatusText("Player " + nextPlayer + " thinking...");
