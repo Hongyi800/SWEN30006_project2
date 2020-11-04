@@ -5,8 +5,8 @@ import ch.aplu.jcardgame.Hand;
 
 public class InteractPlayer extends Player{
 	Card selected = null;
-	public InteractPlayer(Hand hand) {
-		setHands(hand);
+
+	public InteractPlayer() {
 	}
 
 	@Override

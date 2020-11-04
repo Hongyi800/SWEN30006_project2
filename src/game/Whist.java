@@ -3,6 +3,7 @@ package game;
 import ch.aplu.jcardgame.*;
 import ch.aplu.jgamegrid.*;
 
+import java.io.IOException;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.*;
@@ -33,26 +34,25 @@ public class Whist extends CardGame {
 		return clazz.getEnumConstants()[x];
 	}
 
+	// TODO: no filter , random selection  move to SelectRandom
 	// return random Card from Hand
 	public static Card randomCard(Hand hand){
 		int x = random.nextInt(hand.getNumberOfCards());
 		return hand.get(x);
 	}
 
+	// TODO: list after filtering, random selection move to SelectRandom
 	// return random Card from ArrayList
 	public static Card randomCard(ArrayList<Card> list){
 		int x = random.nextInt(list.size());
 		return list.get(x);
 	}
-	//compare rank
+
 	public boolean rankGreater(Card card1, Card card2) {
 		return card1.getRankId() < card2.getRankId(); // Warning: Reverse rank order of cards (see comment on enum)
 	}
 
 	private final String version = "1.0";
-	public final int nbPlayers = 4;
-	public final int nbStartCards = 13;
-	public final int winningScore = 24;
 	private final int handWidth = 400;
 	private final int trickWidth = 40;
 	private final Deck deck = new Deck(Suit.values(), Rank.values(), "cover");
@@ -68,7 +68,8 @@ public class Whist extends CardGame {
 			new Location(575, 25),
 			new Location(650, 575)
 	};
-	private Actor[] scoreActors = {null, null, null, null };
+
+	private Actor[] scoreActors = {null, null, null, null};
 	private final Location trickLocation = new Location(350, 350);
 	private final Location textLocation = new Location(350, 450);
 	private final int thinkingTime = 2000;
@@ -77,7 +78,22 @@ public class Whist extends CardGame {
 	private Location trumpsActorLocation = new Location(50, 50);
 	private boolean enforceRules=false;
 
-	public void setStatus(String string) { setStatusText(string); }
+	private Player player;
+	// switch properties here
+	private PropertyReader propertyReader = new PropertyReader("smart.properties");
+	private Properties properties = propertyReader.setUpProperties();
+	private ArrayList<Player> players = propertyReader.getPlayers();
+
+	// read basic information of properties
+	public final int nbPlayers = Integer.parseInt(properties.getProperty("player_num"));
+	public final int nbStartCards = Integer.parseInt(properties.getProperty("nbStartCards"));
+	public final int winningScore = Integer.parseInt(properties.getProperty("winningScore"));
+
+	public final String SEED_PROP = properties.getProperty("seed");
+
+	public void setStatus(String string) {
+		setStatusText(string);
+	}
 
 	private int[] scores = new int[nbPlayers];
 
@@ -126,14 +142,6 @@ public class Whist extends CardGame {
 		// End graphics
 	}
 
-	private String printHand(ArrayList<Card> cards) {
-		String out = "";
-		for(int i = 0; i < cards.size(); i++) {
-			out += cards.get(i).toString();
-			if(i < cards.size()-1) out += ",";
-		}
-		return(out);
-	}
 
 	private Optional<Integer> playRound() {  // Returns winner, if any
 		// Select and display trump suit
@@ -145,19 +153,34 @@ public class Whist extends CardGame {
 		int winner;
 		Card winningCard;
 		Suit lead;
+
+		Boolean ifAdvanced = false;
+
+		//TODO: add seed
 		int nextPlayer = random.nextInt(nbPlayers); // randomly select player to lead for this round
+
 		for (int i = 0; i < nbStartCards; i++) {
 			trick = new Hand(deck);
 			selected = null;
 			if (0 == nextPlayer) {  // Select lead depending on player type
+				player.addToHand(hands[nextPlayer]);
 				hands[0].setTouchEnabled(true);
 				setStatus("Player 0 double-click on card to lead.");
 				while (null == selected) delay(100);
 			} else {
+				//TODO: check if advanced NPC
+				if (!ifAdvanced) {
+					// normal NPC
+					player.addToHand(hands[nextPlayer]);
+				} else {
+					// advanced NPC
+					player.addToHand(hands[nextPlayer]);
+				}
+
 				setStatusText("Player " + nextPlayer + " thinking...");
 				delay(thinkingTime);
-				selected = randomCard(hands[nextPlayer]);
-
+				// selected the card after selection and filter
+				selected = player.getSelected();  //TODO: write  Card getSelected()  in advancedNPC, Factory can create new strategy and find the card
 			}
 			// Lead with selected card
 			trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards()+2)*trickWidth));
@@ -169,27 +192,30 @@ public class Whist extends CardGame {
 			winner = nextPlayer;
 			winningCard = selected;
 			System.out.println("New trick: Lead Player = "+nextPlayer+", Lead suit = "+selected.getSuit()+", Trump suit = "+trumps);
-			System.out.println("Player "+nextPlayer+" play: "+selected.toString()+" from ["+printHand(hands[nextPlayer].getCardList())+"]");
+			System.out.println("Player "+nextPlayer+" play: "+selected.toString()+" from [" + player.printHand(hands[nextPlayer].getCardList())+"]");
 			// End Lead
 			for (int j = 1; j < nbPlayers; j++) {
 				if (++nextPlayer >= nbPlayers) nextPlayer = 0;  // From last back to first
 				selected = null;
 				if (0 == nextPlayer) {
+					player.addToHand(hands[nextPlayer]);
 					hands[0].setTouchEnabled(true);
 					setStatus("Player 0 double-click on card to follow.");
 					while (null == selected) delay(100);
-				} else if(1 == nextPlayer){
-					//TODO: add selection and filter here
-					setStatusText("Player " + nextPlayer + " thinking...");
-					delay(thinkingTime);
-					ISelectStrategy smart = SelectFactory.chooseSelectStrategy("smart");
-					assert smart != null;
-					smart.getWinCardAndTrump(winningCard,trumps);
-					selected = smart.makeSelectStrategy(hands[1]);
 				} else {
+					//TODO: check if advanced NPC
+					if (!ifAdvanced) {
+						// normal NPC
+						player.addToHand(hands[nextPlayer]);
+					} else {
+						// advanced NPC
+						player.addToHand(hands[nextPlayer]);
+					}
+
 					setStatusText("Player " + nextPlayer + " thinking...");
 					delay(thinkingTime);
-					selected = randomCard(hands[nextPlayer]);
+					// selected the card after selection and filter
+					selected = player.getSelected();  //TODO: write  Card getSelected()  in advancedNPC, Factory can create new strategy and find the card
 				}
 				// Follow with selected card
 				trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards()+2)*trickWidth));
@@ -212,7 +238,7 @@ public class Whist extends CardGame {
 				// End Check
 				selected.transfer(trick, true); // transfer to trick (includes graphic effect)
 				System.out.println("Winning card: "+winningCard.toString());
-				System.out.println("Player "+nextPlayer+" play: "+selected.toString()+" from ["+printHand(hands[nextPlayer].getCardList())+"]");
+				System.out.println("Player "+nextPlayer+" play: "+selected.toString()+" from ["+ player.printHand(hands[nextPlayer].getCardList())+"]");
 				if ( // beat current winner with higher card
 						(selected.getSuit() == winningCard.getSuit() && rankGreater(selected, winningCard)) ||
 								// trumped when non-trump was winning
@@ -236,8 +262,7 @@ public class Whist extends CardGame {
 		return Optional.empty();
 	}
 
-	public Whist()
-	{
+	public Whist() throws IOException {
 		super(700, 700, 30);
 		setTitle("Whist (V" + version + ") Constructed for UofM SWEN30006 with JGameGrid (www.aplu.ch)");
 		setStatusText("Initializing...");
@@ -252,8 +277,7 @@ public class Whist extends CardGame {
 		refresh();
 	}
 
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) throws IOException {
 		new Whist();
 	}
 

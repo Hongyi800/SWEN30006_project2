@@ -1,22 +1,15 @@
 package game;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import ch.aplu.jcardgame.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Player {
+
+	static final Random random = ThreadLocalRandom.current();
 	private Hand hand;
-	private Card select;
-	private int id;
-	private int type;
-
-	public Card takeTurn() {
-		return select;
-	}
-
-	public void printState() {
-		System.out.println("Player "+getId()+" play: "+getSelected().toString()+" from ["+printHand(hand.getCardList())+"]");
-	}
 
 	public String printHand(ArrayList<Card> cards) {
 		String out = "";
@@ -28,42 +21,17 @@ public abstract class Player {
 	}
 
 	//get and set select card
-	public Card getSelected() {
-		return select;
-	}
-	public void setSelect(Card select) {
-		this.select = select;
-	}
 
-	//get and set player id
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
+	public abstract Card getSelected();
 
-
-	//get and set hand
 	public Hand getHand() {
-		return hand;
+		return this.hand;
 	}
-
-	public void setHands(Hand hand) {
+	public void setHands(Hand hand){
 		this.hand = hand;
 	}
 
-	//get and set player type
-	//0: interactive player
-	//1: normal NPC
-	//2: advanced NPC
-	public int getType() {
-		return type;
+	public void addToHand(Hand hand) {
+		setHands(hand);
 	}
-
-	public void setType(int type) {
-		this.type = type;
-	}
-
-
 }

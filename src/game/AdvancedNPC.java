@@ -6,4 +6,9 @@ import ch.aplu.jcardgame.Hand;
 public class AdvancedNPC extends Player{
 	public AdvancedNPC() {
 	}
+
+	@Override
+	public Card getSelected() {
+		return null;
+	}
 }
