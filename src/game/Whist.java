@@ -5,6 +5,7 @@ import ch.aplu.jgamegrid.*;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -67,6 +68,7 @@ public class Whist extends CardGame {
 			  new Location(575, 25),
 			  new Location(650, 575)
 	  };
+
   private Actor[] scoreActors = {null, null, null, null};
   private final Location trickLocation = new Location(350, 350);
   private final Location textLocation = new Location(350, 450);
@@ -75,22 +77,24 @@ public class Whist extends CardGame {
   private Location hideLocation = new Location(-500, - 500);
   private Location trumpsActorLocation = new Location(50, 50);
   private boolean enforceRules=false;
-  private PlayerFactory playerFactory;
-  private Player player;
 
-   // TODO: read properties
-   public final int nbPlayers = 4;
-   public final int nbStartCards = 13;
-   public final int winningScore = 24;
-   //
+  private Player player;
+  // switch properties here
+  private PropertyReader propertyReader = new PropertyReader("smart.properties");
+  private Properties properties = propertyReader.setUpProperties();
+  private ArrayList<Player> players = propertyReader.getPlayers();
+
+  // read basic information of properties
+  public final int nbPlayers = Integer.parseInt(properties.getProperty("player_num"));
+  public final int nbStartCards = Integer.parseInt(properties.getProperty("nbStartCards"));
+  public final int winningScore = Integer.parseInt(properties.getProperty("winningScore"));
+
+  public final String SEED_PROP = properties.getProperty("seed");
+
 
   public void setStatus(String string) {
   	setStatusText(string);
   }
-
-  // read properties
-
-
 
 
 private int[] scores = new int[nbPlayers];
@@ -98,6 +102,7 @@ private int[] scores = new int[nbPlayers];
 Font bigFont = new Font("Serif", Font.BOLD, 36);
 
 private void initScore() {
+	System.out.println(nbPlayers);
 	 for (int i = 0; i < nbPlayers; i++) {
 		 scores[i] = 0;
 		 scoreActors[i] = new TextActor("0", Color.WHITE, bgColor, bigFont);
@@ -140,47 +145,38 @@ private void initRound() {
 	    // End graphics
  }
 
-//// TODO: move to player
-//private String printHand(ArrayList<Card> cards) {
-//	String out = "";
-//	for(int i = 0; i < cards.size(); i++) {
-//		out += cards.get(i).toString();
-//		if(i < cards.size()-1) out += ",";
-//	}
-//	return(out);
-//}
-//// TODO: move to player
-
-
-
 private Optional<Integer> playRound() {  // Returns winner, if any
 	// Select and display trump suit
-		final Suit trumps = randomEnum(Suit.class);
-		final Actor trumpsActor = new Actor("sprites/"+trumpImage[trumps.ordinal()]);
-	    addActor(trumpsActor, trumpsActorLocation);
+	final Suit trumps = randomEnum(Suit.class);
+	final Actor trumpsActor = new Actor("sprites/"+trumpImage[trumps.ordinal()]);
+	addActor(trumpsActor, trumpsActorLocation);
 	// End trump suit
 	Hand trick;
 	int winner;
 	Card winningCard;
 	Suit lead;
-	playerFactory = new PlayerFactory();
+
+	Boolean ifAdvanced = false;
+
+	// TODO: add seed
 	int nextPlayer = random.nextInt(nbPlayers); // randomly select player to lead for this round
+
 	for (int i = 0; i < nbStartCards; i++) {
 		trick = new Hand(deck);
     	selected = null;
         if (0 == nextPlayer) {  // Select lead depending on player type
-			player = PlayerFactory.createPlayer("interactive");
-    		hands[0].setTouchEnabled(true);
+			player.addToHand(hands[nextPlayer]);
+			hands[0].setTouchEnabled(true);
     		setStatus("Player 0 double-click on card to lead.");
     		while (null == selected) delay(100);
         } else {
 			//TODO: check if advanced NPC
 			if (!ifAdvanced) {
 				// normal NPC
-				player = PlayerFactory.createPlayer("normal"); // TODO: randomCard(hands[nextPlayer]);
+				player.addToHand(hands[nextPlayer]); // TODO: randomCard(hands[nextPlayer]);
 			} else {
 				// advanced NPC
-				player = PlayerFactory.createPlayer("advanced", filterType, selectType);
+				player.addToHand(hands[nextPlayer]);
 			}
 
     		setStatusText("Player " + nextPlayer + " thinking...");
@@ -204,7 +200,7 @@ private Optional<Integer> playRound() {  // Returns winner, if any
 			if (++nextPlayer >= nbPlayers) nextPlayer = 0;  // From last back to first
 			selected = null;
 	        if (0 == nextPlayer) {
-				player = PlayerFactory.createPlayer("interactive");
+				player.addToHand(hands[nextPlayer]);
 	    		hands[0].setTouchEnabled(true);
 	    		setStatus("Player 0 double-click on card to follow.");
 	    		while (null == selected) delay(100);
@@ -212,10 +208,10 @@ private Optional<Integer> playRound() {  // Returns winner, if any
 				//TODO: check if advanced NPC
 				if (!ifAdvanced) {
 					// normal NPC
-					player = PlayerFactory.createPlayer("normal"); // TODO: randomCard(hands[nextPlayer]);
+					player.addToHand(hands[nextPlayer]); // TODO: randomCard(hands[nextPlayer]);
 				} else {
 					// advanced NPC
-					player = PlayerFactory.createPlayer("advanced", filterType, selectType);
+					player.addToHand(hands[nextPlayer]);
 				}
 
 				setStatusText("Player " + nextPlayer + " thinking...");
@@ -268,8 +264,7 @@ private Optional<Integer> playRound() {  // Returns winner, if any
 	return Optional.empty();
 }
 
-  public Whist()
-  {
+  public Whist() throws IOException {
     super(700, 700, 30);
     setTitle("Whist (V" + version + ") Constructed for UofM SWEN30006 with JGameGrid (www.aplu.ch)");
     setStatusText("Initializing...");
@@ -284,8 +279,8 @@ private Optional<Integer> playRound() {  // Returns winner, if any
     refresh();
   }
 
-  public static void main(String[] args)
-  {
+  public static void main(String[] args) throws IOException {
+
     new Whist();
   }
 
