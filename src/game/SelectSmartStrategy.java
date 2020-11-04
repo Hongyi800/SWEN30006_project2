@@ -33,9 +33,8 @@ public class SelectSmartStrategy implements ISelectStrategy{
         }else{
             //break the rule
             int min = 0;
-            for(int i=0;i<hand.getNumberOfCards();i++){
-                if(rankGreater(hand.get(i),hand.get(min))
-                        && !hand.get(i).getSuit().equals(winCard.getSuit())){
+            for(int i = 0; i < hand.getNumberOfCards(); i++){
+                if(rankGreater(hand.get(min), hand.get(i)) && !hand.get(i).getSuit().equals(winCard.getSuit())){
                     min = i;
                 }
             }
