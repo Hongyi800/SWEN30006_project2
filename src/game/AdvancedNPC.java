@@ -24,15 +24,15 @@ public class AdvancedNPC extends Player{
 
 	@Override
 	public Card getSelected(Whist.Suit lead, Whist.Suit trump, Hand hand) {
-
+		ISelectStrategy select = SelectFactory.chooseSelectStrategy(selectType);
+		Hand filteredHand = hand;
 		if (lead != null) {
 			filter = filterFactory.filter(filterType, hand, lead, trump);
-			Hand filteredHand = filter.filterHand();
 
-
-
+			filteredHand = filter.filterHand();
 			// TODO: get selected card from filtered hand
-			Card curHighest = randomCard(filteredHand);;
+			Card curHighest = select.makeSelectStrategy(filteredHand,hand);
+			System.out.println(curHighest);
 			Card cardToPlay = hand.getCard(((Whist.Suit)curHighest.getSuit()),((Whist.Rank)curHighest.getRank()));
 			return cardToPlay;
 			//TODO: add filter and select
@@ -40,7 +40,7 @@ public class AdvancedNPC extends Player{
 		}
 
 		// first player randomly selects a card
-		return randomCard(hand);
+		return select.makeSelectStrategy(filteredHand,hand);
        //TODO: add seed
 	}
 

@@ -13,7 +13,8 @@ public class SelectFactory{
             case "random":
                 return new SelectRandomStrategy();
             //do highest rank select
-            case "HighestRank":
+            case "highest":
+                System.out.println("sdjshdifjkdsjflskdfjlskdjflajdjflksjd");
                 return new SelectHighestRankStrategy();
             //do smart selection
             case "smart":

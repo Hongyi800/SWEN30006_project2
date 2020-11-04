@@ -27,6 +27,7 @@ public class NormalNPC extends Player{
 
 		if (lead != null) {
 			filter = filterFactory.filter(filterType, hand, lead, trump);
+
 			Hand filteredhand = filter.filterHand();
 
 			// TODO: get selected card from filtered hand
@@ -35,6 +36,7 @@ public class NormalNPC extends Player{
 
 		// first player randomly selects a card
 		return randomCard(hand); //TODO: add seed
+
 	}
 
 	@Override
