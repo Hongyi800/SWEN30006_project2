@@ -22,6 +22,8 @@ public class SelectSmartStrategy implements ISelectStrategy{
 
     @Override
     public Card makeSelectStrategy(Hand hand, Hand originHand, Card currentWinCard, Whist.Suit trump) {
+        this.winCard = currentWinCard;
+        this.trump = trump;
 
         if(canWin(hand)){
             //follow the rule and play the card
@@ -44,7 +46,7 @@ public class SelectSmartStrategy implements ISelectStrategy{
 
         }
     }
-    
+
     private boolean rankGreater(Card card1, Card card2) {
         return card1.getRankId() < card2.getRankId(); // Warning: Reverse rank order of cards (see comment on enum)
     }

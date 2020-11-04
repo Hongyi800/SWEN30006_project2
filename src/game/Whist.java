@@ -34,20 +34,6 @@ public class Whist extends CardGame {
 		return clazz.getEnumConstants()[x];
 	}
 
-	// TODO: no filter , random selection  move to SelectRandom
-	// return random Card from Hand
-	public static Card randomCard(Hand hand){
-		int x = random.nextInt(hand.getNumberOfCards());
-		return hand.get(x);
-	}
-
-	// TODO: list after filtering, random selection move to SelectRandom
-	// return random Card from ArrayList
-	public static Card randomCard(ArrayList<Card> list){
-		int x = random.nextInt(list.size());
-		return list.get(x);
-	}
-
 	public boolean rankGreater(Card card1, Card card2) {
 		return card1.getRankId() < card2.getRankId(); // Warning: Reverse rank order of cards (see comment on enum)
 	}
@@ -80,7 +66,7 @@ public class Whist extends CardGame {
 
 	private Player player;
 	// switch properties here
-	private PropertyReader propertyReader = new PropertyReader("legal.properties");
+	private PropertyReader propertyReader = new PropertyReader("smart.properties");
 	private Properties properties = propertyReader.setUpProperties();
 	private ArrayList<Player> players = propertyReader.getPlayers();
 
