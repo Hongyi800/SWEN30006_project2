@@ -21,15 +21,10 @@ public class SelectRandomStrategy implements ISelectStrategy {
      */
 
     @Override
-    public Card makeSelectStrategy(Hand hand, Hand originHand) {
+    public Card makeSelectStrategy(Hand hand, Hand originHand, Card currentWinCard, Whist.Suit trump) {
         // return random Card from Hand
         int x = random.nextInt(originHand.getNumberOfCards());
-        System.out.println(originHand.get(x));
         return originHand.get(x);
     }
 
-    @Override
-    public void getWinCardAndTrump(Card currentWinCard, Whist.Suit trump) {
-
-    }
 }

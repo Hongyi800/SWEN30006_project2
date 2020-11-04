@@ -22,7 +22,7 @@ public class NormalNPC extends Player{
 	}
 
 	@Override
-	public Card getSelected(Whist.Suit lead, Whist.Suit trump, Hand hand) {
+	public Card getSelected(Whist.Suit lead, Whist.Suit trump, Hand hand, Card winningCard) {
 
 		if (lead != null) {
 			filter = filterFactory.filter(filterType, hand, lead, trump);

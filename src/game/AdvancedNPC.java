@@ -23,7 +23,7 @@ public class AdvancedNPC extends Player{
 	}
 
 	@Override
-	public Card getSelected(Whist.Suit lead, Whist.Suit trump, Hand hand) {
+	public Card getSelected(Whist.Suit lead, Whist.Suit trump, Hand hand, Card winningCard) {
 		ISelectStrategy select = selectFactory.chooseSelectStrategy(selectType);
 		Hand filteredHand = hand;
 		if (lead != null) {
@@ -31,14 +31,14 @@ public class AdvancedNPC extends Player{
 
 			filteredHand = filter.filterHand();
 			// get selected card from filtered hand
-			Card curSelected = select.makeSelectStrategy(filteredHand, hand);
+			Card curSelected = select.makeSelectStrategy(filteredHand, hand, winningCard, trump);
 			Card cardToPlay = hand.getCard(((Whist.Suit)curSelected.getSuit()),((Whist.Rank)curSelected.getRank()));
 			return cardToPlay;
 		}
 
 		// first player randomly selects a card
 		select = selectFactory.chooseSelectStrategy(selectFactory.RANDOM_SELECT);
-		return select.makeSelectStrategy(filteredHand, hand);
+		return select.makeSelectStrategy(filteredHand, hand, winningCard, trump);
        //TODO: add seed
 	}
 

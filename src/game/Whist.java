@@ -147,12 +147,12 @@ public class Whist extends CardGame {
 	private Optional<Integer> playRound() {  // Returns winner, if any
 		// Select and display trump suit
 		final Suit trumps = randomEnum(Suit.class); // TODO: add seed
-		final Actor trumpsActor = new Actor("sprites/"+trumpImage[trumps.ordinal()]);
+		final Actor trumpsActor = new Actor("sprites/"+ trumpImage[trumps.ordinal()]);
 		addActor(trumpsActor, trumpsActorLocation);
 		// End trump suit
 		Hand trick;
 		int winner;
-		Card winningCard;
+		Card winningCard = null;
 		Suit lead;
 
 		//TODO: add seed
@@ -175,7 +175,7 @@ public class Whist extends CardGame {
 				delay(thinkingTime);
 
 				// select the card after selection and filter
-				selected = player.getSelected(null, trumps, hands[nextPlayer]);
+				selected = player.getSelected(null, trumps, hands[nextPlayer], winningCard);
 			}
 
 			// Lead with selected card
@@ -205,7 +205,7 @@ public class Whist extends CardGame {
 					player.addToHand(hands[nextPlayer]);
 					setStatusText("Player " + nextPlayer + " thinking...");
 					delay(thinkingTime);
-					selected = player.getSelected(lead, trumps,hands[nextPlayer]);
+					selected = player.getSelected(lead, trumps, hands[nextPlayer], winningCard);
 				}
 
 				// Follow with selected card
@@ -228,8 +228,6 @@ public class Whist extends CardGame {
 				}
 				// End Check
 				selected.transfer(trick, true); // transfer to trick (includes graphic effect)
-
-
 
 				System.out.println("Winning card: "+winningCard.toString());
 				System.out.println("Player "+nextPlayer+" play: "+selected.toString()+" from ["+ player.printHand(hands[nextPlayer].getCardList())+"]");

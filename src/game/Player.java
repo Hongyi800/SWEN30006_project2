@@ -24,7 +24,7 @@ public abstract class Player {
 	}
 
 	//get selected card
-	public abstract Card getSelected(Whist.Suit lead, Whist.Suit trump, Hand originHand);
+	public abstract Card getSelected(Whist.Suit lead, Whist.Suit trump, Hand originHand, Card winningCard);
 
 	public abstract String getPlayerType();
 
