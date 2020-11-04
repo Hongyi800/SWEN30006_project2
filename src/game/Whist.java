@@ -88,6 +88,8 @@ public class Whist extends CardGame {
 	public final int nbPlayers = Integer.parseInt(properties.getProperty("player_num"));
 	public final int nbStartCards = Integer.parseInt(properties.getProperty("nbStartCards"));
 	public final int winningScore = Integer.parseInt(properties.getProperty("winningScore"));
+	public final String HUMAN = "interactive";
+
 
 	public final String SEED_PROP = properties.getProperty("seed");
 
@@ -154,34 +156,29 @@ public class Whist extends CardGame {
 		Card winningCard;
 		Suit lead;
 
-		Boolean ifAdvanced = false;
-
 		//TODO: add seed
 		int nextPlayer = random.nextInt(nbPlayers); // randomly select player to lead for this round
 
 		for (int i = 0; i < nbStartCards; i++) {
+			player = players.get(nextPlayer);
 			trick = new Hand(deck);
 			selected = null;
-			if (0 == nextPlayer) {  // Select lead depending on player type
+
+			// Select lead depending on player type
+			if (player.getPlayerType() == HUMAN) {  // human player
+				hands[nextPlayer].setTouchEnabled(true);
 				player.addToHand(hands[nextPlayer]);
-				hands[0].setTouchEnabled(true);
-				setStatus("Player 0 double-click on card to lead.");
+				setStatus("Player " + nextPlayer + "double-click on card to lead.");
 				while (null == selected) delay(100);
 			} else {
-				//TODO: check if advanced NPC
-				if (!ifAdvanced) {
-					// normal NPC
-					player.addToHand(hands[nextPlayer]);
-				} else {
-					// advanced NPC
-					player.addToHand(hands[nextPlayer]);
-				}
-
+				player.addToHand(hands[nextPlayer]);
 				setStatusText("Player " + nextPlayer + " thinking...");
 				delay(thinkingTime);
-				// selected the card after selection and filter
-				selected = player.getSelected();  //TODO: write  Card getSelected()  in advancedNPC, Factory can create new strategy and find the card
 			}
+
+			// selected the card after selection and filter
+			selected = player.getSelected();
+
 			// Lead with selected card
 			trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards()+2)*trickWidth));
 			trick.draw();
@@ -197,26 +194,21 @@ public class Whist extends CardGame {
 			for (int j = 1; j < nbPlayers; j++) {
 				if (++nextPlayer >= nbPlayers) nextPlayer = 0;  // From last back to first
 				selected = null;
-				if (0 == nextPlayer) {
+
+				// Select lead depending on player type
+				if (player.getPlayerType() == HUMAN) {  // human player
+					hands[nextPlayer].setTouchEnabled(true);
 					player.addToHand(hands[nextPlayer]);
-					hands[0].setTouchEnabled(true);
-					setStatus("Player 0 double-click on card to follow.");
+					setStatus("Player " + nextPlayer + "double-click on card to follow.");
 					while (null == selected) delay(100);
 				} else {
-					//TODO: check if advanced NPC
-					if (!ifAdvanced) {
-						// normal NPC
-						player.addToHand(hands[nextPlayer]);
-					} else {
-						// advanced NPC
-						player.addToHand(hands[nextPlayer]);
-					}
-
+					player.addToHand(hands[nextPlayer]);
 					setStatusText("Player " + nextPlayer + " thinking...");
 					delay(thinkingTime);
-					// selected the card after selection and filter
-					selected = player.getSelected();  //TODO: write  Card getSelected()  in advancedNPC, Factory can create new strategy and find the card
 				}
+
+				selected = player.getSelected();
+
 				// Follow with selected card
 				trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards()+2)*trickWidth));
 				trick.draw();
