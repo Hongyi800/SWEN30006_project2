@@ -4,26 +4,23 @@ import ch.aplu.jcardgame.*;
 
 public class FilterFactory {
     IFilterStrategy iFilterStrategy;
-    //filter type
-    //0: none filter
-    //1: NaiveLegal
-    //2: trumpSaving
-    public Hand filter(int filterType, Hand hand){
-        if(filterType == 0) {
 
-            iFilterStrategy = new FilterNoneStrategy(hand);
+    public Hand filter(String filterType, Hand hand, Whist.Suit trump, Whist.Suit lead){
+        if(filterType.equals("none")) {
 
-        }else if(filterType == 1) {
+            iFilterStrategy = new FilterNoneStrategy();
 
-            iFilterStrategy = new FilterNaiveLegalStrategy(hand);
+        }else if(filterType.equals("legal")) {
 
-        }else if(filterType == 2) {
+            iFilterStrategy = new FilterNaiveLegalStrategy();
 
-            iFilterStrategy = new FilterTrumpSavingStrategy(hand);
+        }else if(filterType.equals("trump")) {
+
+            iFilterStrategy = new FilterTrumpSavingStrategy();
 
         }else {
             return null;
         }
-        return iFilterStrategy.filterHand(hand);
+        return iFilterStrategy.filterHand(hand,trump,lead);
     }
 }

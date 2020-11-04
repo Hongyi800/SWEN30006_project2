@@ -3,9 +3,7 @@ package game;
 import ch.aplu.jcardgame.*;
 
 public interface IFilterStrategy {
-        Hand hand = null;
-        Hand filterHand(Hand hand);
 
-        Hand getHand();
-        void setHand(Hand hand);
+        Hand filterHand(Hand hand, Whist.Suit trump, Whist.Suit lead);
+
 }

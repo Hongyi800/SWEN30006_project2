@@ -4,24 +4,21 @@ import ch.aplu.jcardgame.*;
 
 public class FilterTrumpSavingStrategy implements IFilterStrategy {
 
-    private Hand hand;
+    public FilterTrumpSavingStrategy() {
 
-    public FilterTrumpSavingStrategy(Hand hand) {
-        setHand(hand);
     }
 
     @Override
-    public Hand filterHand(Hand hand) {
-        return null;
+    public Hand filterHand(Hand originHand,Whist.Suit trump,Whist.Suit lead) {
+        Hand leadArray = originHand.extractCardsWithSuit(lead);
+        Hand trumpArray = originHand.extractCardsWithSuit(trump);
+        if(leadArray.isEmpty()&&trumpArray.isEmpty()){
+            return originHand;
+        }else if(!leadArray.isEmpty()){
+            return leadArray;
+        }else{
+            return trumpArray;
+        }
     }
 
-    @Override
-    public Hand getHand() {
-        return null;
-    }
-
-    @Override
-    public void setHand(Hand hand) {
-
-    }
 }

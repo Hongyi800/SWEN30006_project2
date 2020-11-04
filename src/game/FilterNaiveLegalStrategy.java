@@ -2,25 +2,27 @@ package game;
 
 import ch.aplu.jcardgame.*;
 
+import java.util.ArrayList;
+
 public class FilterNaiveLegalStrategy implements IFilterStrategy {
-    private Hand hand;
 
-    public FilterNaiveLegalStrategy(Hand hand) {
-        setHand(hand);
+    public FilterNaiveLegalStrategy() {
+
     }
 
     @Override
-    public Hand filterHand(Hand hand) {
-        return null;
+    public Hand filterHand(Hand originHand, Whist.Suit trump,Whist.Suit lead) {
+        Hand leadArray = originHand.extractCardsWithSuit(lead);
+        Hand trumpArray = originHand.extractCardsWithSuit(trump);
+        if(leadArray.isEmpty()&&trumpArray.isEmpty()){
+            return originHand;
+        }else{
+            int numLead = leadArray.getNumberOfCards();
+            for(int i = 0; i< numLead; i++){
+                leadArray.get(i).transfer(trumpArray, false);
+            }
+            return trumpArray;
+        }
     }
 
-    @Override
-    public Hand getHand() {
-        return null;
-    }
-
-    @Override
-    public void setHand(Hand hand) {
-
-    }
 }
