@@ -14,11 +14,6 @@ public abstract class Player {
 	public final String NORMAL_NPC = "normal";
 	public final String ADVANCED_NPC = "advanced";
 
-	public final String RANDOM_SELECT = "random";  // random selection
-	public final String SMART = "smart";  // smart selection
-	public final String HIGHEST = "highest";  // highest rank selection
-
-
 	public String printHand(ArrayList<Card> cards) {
 		String out = "";
 		for(int i = 0; i < cards.size(); i++) {

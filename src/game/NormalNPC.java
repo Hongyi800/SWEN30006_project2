@@ -9,7 +9,6 @@ public class NormalNPC extends Player{
 	private String filterType;
 	private String selectType;
 	private IFilterStrategy filter;
-	private Hand hand;
 
 	public NormalNPC(String filterType, String selectType) {
 		this.filterType = filterType;
@@ -28,10 +27,10 @@ public class NormalNPC extends Player{
 		if (lead != null) {
 			filter = filterFactory.filter(filterType, hand, lead, trump);
 
-			Hand filteredhand = filter.filterHand();
+			Hand filteredHand = filter.filterHand();
 
 			// TODO: get selected card from filtered hand
-			return randomCard(filteredhand); //TODO: add filter and select
+			return randomCard(filteredHand); //TODO: add filter and select
 		}
 
 		// first player randomly selects a card

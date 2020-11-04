@@ -1,25 +1,26 @@
 package game;
 
-import ch.aplu.jcardgame.*;
-import ch.aplu.jgamegrid.*;
-
-import static game.Whist.randomCard;
-
 public class SelectFactory{
-    public static ISelectStrategy chooseSelectStrategy(String selectStrategy) {
+
+    public final String RANDOM_SELECT = "random";  // random selection
+    public final String SMART = "smart";  // smart selection
+    public final String HIGHEST = "highest";  // highest rank selection
+
+    public ISelectStrategy chooseSelectStrategy(String selectStrategy) {
         // choose which select method it will use
+
         switch (selectStrategy) {
             //do random selection
-            case "random":
+            case RANDOM_SELECT:
                 return new SelectRandomStrategy();
             //do highest rank select
-            case "highest":
-                System.out.println("sdjshdifjkdsjflskdfjlskdjflajdjflksjd");
+            case HIGHEST:
                 return new SelectHighestRankStrategy();
             //do smart selection
-            case "smart":
+            case SMART:
                 return new SelectSmartStrategy();
         }
+
         return null;
     }
 }

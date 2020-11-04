@@ -4,10 +4,10 @@ import ch.aplu.jcardgame.*;
 
 public class SelectHighestRankStrategy implements ISelectStrategy{
     @Override
-    public Card makeSelectStrategy(Hand handAfterFilter,Hand originHand) {
+    public Card makeSelectStrategy(Hand handAfterFilter, Hand originHand) {
         // return Card with highest rank from Hand
         int highest = 0;
-        for(int i=0;i<handAfterFilter.getNumberOfCards();i++){
+        for(int i = 0;i < handAfterFilter.getNumberOfCards(); i++){
             if(rankGreater(handAfterFilter.get(i),handAfterFilter.get(highest))){
                 highest = i;
             }

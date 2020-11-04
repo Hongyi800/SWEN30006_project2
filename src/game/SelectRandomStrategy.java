@@ -7,7 +7,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class SelectRandomStrategy implements ISelectStrategy {
 
-    static final Random random = ThreadLocalRandom.current();
+    public static final Random random = ThreadLocalRandom.current();
     /*
     if(seedProp == null) {
         // and no property
@@ -19,11 +19,13 @@ public class SelectRandomStrategy implements ISelectStrategy {
     }
 
      */
+
     @Override
     public Card makeSelectStrategy(Hand hand, Hand originHand) {
         // return random Card from Hand
         int x = random.nextInt(originHand.getNumberOfCards());
-        return hand.get(x);
+        System.out.println(originHand.get(x));
+        return originHand.get(x);
     }
 
     @Override
