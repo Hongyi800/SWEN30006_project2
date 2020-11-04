@@ -4,8 +4,13 @@ import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.Hand;
 
 public class InteractPlayer extends Player{
-	public InteractPlayer() {
-
+	Card selected = null;
+	public InteractPlayer(Hand hand) {
+		setHands(hand);
 	}
-	
+
+	@Override
+	public Card getSelected() {
+		return null;
+	}
 }

@@ -1,7 +1,6 @@
 package game;
 
-import ch.aplu.jcardgame.Card;
-import ch.aplu.jcardgame.Hand;
+import ch.aplu.jcardgame.*;
 
 public class NormalNPC extends Player{
 	public NormalNPC() {

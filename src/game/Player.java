@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import ch.aplu.jcardgame.*;
 
 public abstract class Player {
-	private Hand[] hands;
+	private Hand hand;
 	private Card select;
 	private int id;
 	private int type;
@@ -15,7 +15,7 @@ public abstract class Player {
 	}
 
 	public void printState() {
-		System.out.println("Player "+getId()+" play: "+getSelect().toString()+" from ["+printHand(hands[getId()].getCardList())+"]");
+		System.out.println("Player "+getId()+" play: "+getSelected().toString()+" from ["+printHand(hand.getCardList())+"]");
 	}
 
 	public String printHand(ArrayList<Card> cards) {
@@ -28,7 +28,7 @@ public abstract class Player {
 	}
 
 	//get and set select card
-	public Card getSelect() {
+	public Card getSelected() {
 		return select;
 	}
 	public void setSelect(Card select) {
@@ -45,12 +45,12 @@ public abstract class Player {
 
 
 	//get and set hand
-	public Hand[] getHands() {
-		return hands;
+	public Hand getHand() {
+		return hand;
 	}
 
-	public void setHands(Hand[] hands) {
-		this.hands = hands;
+	public void setHands(Hand hand) {
+		this.hand = hand;
 	}
 
 	//get and set player type
