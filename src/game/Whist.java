@@ -80,7 +80,7 @@ public class Whist extends CardGame {
 
 	private Player player;
 	// switch properties here
-	private PropertyReader propertyReader = new PropertyReader("smart.properties");
+	private PropertyReader propertyReader = new PropertyReader("whist.properties");
 	private Properties properties = propertyReader.setUpProperties();
 	private ArrayList<Player> players = propertyReader.getPlayers();
 

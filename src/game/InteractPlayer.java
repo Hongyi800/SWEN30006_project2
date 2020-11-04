@@ -6,11 +6,16 @@ import ch.aplu.jcardgame.Hand;
 public class InteractPlayer extends Player{
 	Card selected = null;
 
-	public InteractPlayer() {
+	public InteractPlayer(String filterType, String selectType) {
 	}
 
 	@Override
 	public Card getSelected() {
 		return null;
+	}
+
+	@Override
+	public String getPlayerType() {
+		return HUMAN;
 	}
 }

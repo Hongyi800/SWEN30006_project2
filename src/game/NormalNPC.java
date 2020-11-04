@@ -5,7 +5,7 @@ import ch.aplu.jcardgame.*;
 
 public class NormalNPC extends Player{
 
-	public NormalNPC() {
+	public NormalNPC(String filterType, String selectType) {
 	}
 
 	public Card randomCard(Hand hand){
@@ -16,5 +16,10 @@ public class NormalNPC extends Player{
 	@Override
 	public Card getSelected() {
 		return randomCard(getHand());
+	}
+
+	@Override
+	public String getPlayerType() {
+		return NORMAL_NPC;
 	}
 }
