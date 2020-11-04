@@ -9,7 +9,7 @@ public class InteractPlayer extends Player{
 	}
 
 	@Override
-	public Card getSelected(Whist.Suit lead, Whist.Suit trump) {
+	public Card getSelected(Whist.Suit lead, Whist.Suit trump, Hand hand) {
 		return null;
 	}
 

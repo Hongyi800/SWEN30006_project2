@@ -21,11 +21,13 @@ public class SelectSmartStrategy implements ISelectStrategy{
     private int winCardPos = 0;
 
     @Override
-    public Card makeSelectStrategy(Hand hand) {
+    public Card makeSelectStrategy(Hand hand, Hand originHand) {
 
         if(canWin(hand)){
             //follow the rule and play the card
-            return hand.get(winCardPos);
+            Card curHighest = hand.get(winCardPos);
+            Card cardToPlay = originHand.getCard(((Whist.Suit)curHighest.getSuit()),((Whist.Rank)curHighest.getRank()));
+            return cardToPlay;
         }else{
             //break the rule
             int min = 0;
@@ -35,7 +37,11 @@ public class SelectSmartStrategy implements ISelectStrategy{
                     min = i;
                 }
             }
-            return hand.get(min);
+
+            Card curHighest = hand.get(min);
+            Card cardToPlay = originHand.getCard(((Whist.Suit)curHighest.getSuit()),((Whist.Rank)curHighest.getRank()));
+            return cardToPlay;
+
         }
     }
 

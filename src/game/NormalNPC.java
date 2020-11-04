@@ -23,18 +23,18 @@ public class NormalNPC extends Player{
 	}
 
 	@Override
-	public Card getSelected(Whist.Suit lead, Whist.Suit trump) {
+	public Card getSelected(Whist.Suit lead, Whist.Suit trump, Hand hand) {
 
 		if (lead != null) {
-			filter = filterFactory.filter(filterType, getHand(), lead, trump);
-			hand = filter.filterHand();
+			filter = filterFactory.filter(filterType, hand, lead, trump);
+			Hand filteredhand = filter.filterHand();
 
 			// TODO: get selected card from filtered hand
-			return randomCard(hand); //TODO: add filter and select
+			return randomCard(filteredhand); //TODO: add filter and select
 		}
 
 		// first player randomly selects a card
-		return randomCard(getHand()); //TODO: add seed
+		return randomCard(hand); //TODO: add seed
 	}
 
 	@Override

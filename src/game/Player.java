@@ -29,13 +29,10 @@ public abstract class Player {
 	}
 
 	//get selected card
-	public abstract Card getSelected(Whist.Suit lead, Whist.Suit trump);
+	public abstract Card getSelected(Whist.Suit lead, Whist.Suit trump, Hand originHand);
 
 	public abstract String getPlayerType();
 
-	public Hand getHand() {
-		return this.hand;
-	}
 
 	public void setHands(Hand hand){
 		this.hand = hand;

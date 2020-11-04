@@ -25,6 +25,7 @@ public class FilterTrumpSavingStrategy implements IFilterStrategy {
         }else{
             return trumpArray;
         }
+        //return hand;
     }
 
 }

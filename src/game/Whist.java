@@ -173,8 +173,9 @@ public class Whist extends CardGame {
 				player.addToHand(hands[nextPlayer]);
 				setStatusText("Player " + nextPlayer + " thinking...");
 				delay(thinkingTime);
+
 				// select the card after selection and filter
-				selected = player.getSelected(null, trumps);
+				selected = player.getSelected(null, trumps, hands[nextPlayer]);
 			}
 
 			// Lead with selected card
@@ -204,7 +205,7 @@ public class Whist extends CardGame {
 					player.addToHand(hands[nextPlayer]);
 					setStatusText("Player " + nextPlayer + " thinking...");
 					delay(thinkingTime);
-					selected = player.getSelected(lead, trumps);
+					selected = player.getSelected(lead, trumps,hands[nextPlayer]);
 				}
 
 				// Follow with selected card
@@ -227,6 +228,9 @@ public class Whist extends CardGame {
 				}
 				// End Check
 				selected.transfer(trick, true); // transfer to trick (includes graphic effect)
+
+
+
 				System.out.println("Winning card: "+winningCard.toString());
 				System.out.println("Player "+nextPlayer+" play: "+selected.toString()+" from ["+ player.printHand(hands[nextPlayer].getCardList())+"]");
 				if ( // beat current winner with higher card

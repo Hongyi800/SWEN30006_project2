@@ -20,9 +20,9 @@ public class SelectRandomStrategy implements ISelectStrategy {
 
      */
     @Override
-    public Card makeSelectStrategy(Hand hand) {
+    public Card makeSelectStrategy(Hand hand, Hand originHand) {
         // return random Card from Hand
-        int x = random.nextInt(hand.getNumberOfCards());
+        int x = random.nextInt(originHand.getNumberOfCards());
         return hand.get(x);
     }
 
