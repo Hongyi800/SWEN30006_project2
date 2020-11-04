@@ -144,10 +144,9 @@ public class Whist extends CardGame {
 		// End graphics
 	}
 
-
 	private Optional<Integer> playRound() {  // Returns winner, if any
 		// Select and display trump suit
-		final Suit trumps = randomEnum(Suit.class);
+		final Suit trumps = randomEnum(Suit.class); // TODO: add seed
 		final Actor trumpsActor = new Actor("sprites/"+trumpImage[trumps.ordinal()]);
 		addActor(trumpsActor, trumpsActorLocation);
 		// End trump suit
@@ -175,7 +174,7 @@ public class Whist extends CardGame {
 				setStatusText("Player " + nextPlayer + " thinking...");
 				delay(thinkingTime);
 				// select the card after selection and filter
-				selected = player.getSelected();
+				selected = player.getSelected(null, trumps);
 			}
 
 			// Lead with selected card
@@ -205,7 +204,7 @@ public class Whist extends CardGame {
 					player.addToHand(hands[nextPlayer]);
 					setStatusText("Player " + nextPlayer + " thinking...");
 					delay(thinkingTime);
-					selected = player.getSelected();
+					selected = player.getSelected(lead, trumps);
 				}
 
 				// Follow with selected card

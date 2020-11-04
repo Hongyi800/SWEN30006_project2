@@ -49,12 +49,8 @@ public class PropertyReader {
             // get the select strategy of this player
             selectType = properties.getProperty("select_" + i);
 
-            System.out.println("playerType: " + playerType);
-            System.out.println("filterType: " + filterType);
-            System.out.println("selectType: " + selectType);
-
             players.add(i, playerFactory.createPlayer(playerType, filterType, selectType));
-            System.out.println(players);
+
         }
         return properties;
     }

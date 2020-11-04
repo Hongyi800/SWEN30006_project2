@@ -4,13 +4,12 @@ import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.Hand;
 
 public class InteractPlayer extends Player{
-	Card selected = null;
 
-	public InteractPlayer(String filterType, String selectType) {
+	public InteractPlayer() {
 	}
 
 	@Override
-	public Card getSelected() {
+	public Card getSelected(Whist.Suit lead, Whist.Suit trump) {
 		return null;
 	}
 

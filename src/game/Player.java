@@ -14,13 +14,10 @@ public abstract class Player {
 	public final String NORMAL_NPC = "normal";
 	public final String ADVANCED_NPC = "advanced";
 
-	public final String NO_FILTERING= "none";
-	public final String LEGAL = "legal";  // naive legal approach
-	public final String TRUMP = "trump";  // trump saving approach
-
 	public final String RANDOM_SELECT = "random";  // random selection
 	public final String SMART = "smart";  // smart selection
 	public final String HIGHEST = "highest";  // highest rank selection
+
 
 	public String printHand(ArrayList<Card> cards) {
 		String out = "";
@@ -31,8 +28,8 @@ public abstract class Player {
 		return(out);
 	}
 
-	//get select card
-	public abstract Card getSelected();
+	//get selected card
+	public abstract Card getSelected(Whist.Suit lead, Whist.Suit trump);
 
 	public abstract String getPlayerType();
 

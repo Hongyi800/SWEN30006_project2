@@ -10,7 +10,7 @@ public class PlayerFactory {
 
 	public Player createPlayer(String playerOption, String filterType, String selectType) {
 		if(playerOption.equals(HUMAN)) {
-			return new InteractPlayer(filterType, selectType);
+			return new InteractPlayer();
 		}else if(playerOption.equals(NORMAL_NPC)) {
 			return new NormalNPC(filterType, selectType);
 		}else if(playerOption.equals(ADVANCED_NPC)) {
@@ -19,5 +19,4 @@ public class PlayerFactory {
 			return null;
 		}
 	}
-
 }
