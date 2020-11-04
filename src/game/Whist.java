@@ -80,7 +80,7 @@ public class Whist extends CardGame {
 
 	private Player player;
 	// switch properties here
-	private PropertyReader propertyReader = new PropertyReader("whist.properties");
+	private PropertyReader propertyReader = new PropertyReader("legal.properties");
 	private Properties properties = propertyReader.setUpProperties();
 	private ArrayList<Player> players = propertyReader.getPlayers();
 
@@ -165,7 +165,7 @@ public class Whist extends CardGame {
 			selected = null;
 
 			// Select lead depending on player type
-			if (player.getPlayerType() == HUMAN) {  // human player
+			if (player.getPlayerType().equals(HUMAN)) {  // human player
 				hands[nextPlayer].setTouchEnabled(true);
 				player.addToHand(hands[nextPlayer]);
 				setStatus("Player " + nextPlayer + "double-click on card to lead.");
@@ -174,10 +174,9 @@ public class Whist extends CardGame {
 				player.addToHand(hands[nextPlayer]);
 				setStatusText("Player " + nextPlayer + " thinking...");
 				delay(thinkingTime);
+				// select the card after selection and filter
+				selected = player.getSelected();
 			}
-
-			// selected the card after selection and filter
-			selected = player.getSelected();
 
 			// Lead with selected card
 			trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards()+2)*trickWidth));
@@ -194,9 +193,10 @@ public class Whist extends CardGame {
 			for (int j = 1; j < nbPlayers; j++) {
 				if (++nextPlayer >= nbPlayers) nextPlayer = 0;  // From last back to first
 				selected = null;
+				player = players.get(nextPlayer);
 
 				// Select lead depending on player type
-				if (player.getPlayerType() == HUMAN) {  // human player
+				if (player.getPlayerType().equals(HUMAN)) {  // human player
 					hands[nextPlayer].setTouchEnabled(true);
 					player.addToHand(hands[nextPlayer]);
 					setStatus("Player " + nextPlayer + "double-click on card to follow.");
@@ -205,9 +205,8 @@ public class Whist extends CardGame {
 					player.addToHand(hands[nextPlayer]);
 					setStatusText("Player " + nextPlayer + " thinking...");
 					delay(thinkingTime);
+					selected = player.getSelected();
 				}
-
-				selected = player.getSelected();
 
 				// Follow with selected card
 				trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards()+2)*trickWidth));

@@ -11,9 +11,9 @@ public class PlayerFactory {
 	public Player createPlayer(String playerOption, String filterType, String selectType) {
 		if(playerOption.equals(HUMAN)) {
 			return new InteractPlayer(filterType, selectType);
-		}else if(playerOption.contentEquals(NORMAL_NPC)) {
+		}else if(playerOption.equals(NORMAL_NPC)) {
 			return new NormalNPC(filterType, selectType);
-		}else if(playerOption.contentEquals(ADVANCED_NPC)) {
+		}else if(playerOption.equals(ADVANCED_NPC)) {
 			return new AdvancedNPC(filterType, selectType);
 		}else {
 			return null;

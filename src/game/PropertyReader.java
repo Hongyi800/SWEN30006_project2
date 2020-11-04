@@ -53,8 +53,8 @@ public class PropertyReader {
             System.out.println("filterType: " + filterType);
             System.out.println("selectType: " + selectType);
 
-
             players.add(i, playerFactory.createPlayer(playerType, filterType, selectType));
+            System.out.println(players);
         }
         return properties;
     }
