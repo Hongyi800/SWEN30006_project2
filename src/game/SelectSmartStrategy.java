@@ -24,16 +24,17 @@ public class SelectSmartStrategy implements ISelectStrategy{
     public Card makeSelectStrategy(Hand hand, Hand originHand, Card currentWinCard, Whist.Suit trump) {
         this.winCard = currentWinCard;
         this.trump = trump;
-        if(canWin(originHand)){
+
+        if(canWin(hand)){
             //follow the rule and play the card
             Card cardToPlay = originHand.get(winCardPos);
             return cardToPlay;
         }else{
             //break the rule
             int min = 0;
-            for(int i=0;i<hand.getNumberOfCards();i++){
-                if(rankGreater(hand.get(min),hand.get(i))
-                        && !hand.get(i).getSuit().equals(currentWinCard.getSuit())){
+
+            for(int i = 0; i < hand.getNumberOfCards(); i++){
+                if(rankGreater(hand.get(min), hand.get(i)) && !hand.get(i).getSuit().equals(winCard.getSuit())){
                     min = i;
                 }
             }
@@ -44,7 +45,7 @@ public class SelectSmartStrategy implements ISelectStrategy{
 
         }
     }
-    
+
     private boolean rankGreater(Card card1, Card card2) {
         return card1.getRankId() < card2.getRankId(); // Warning: Reverse rank order of cards (see comment on enum)
     }
