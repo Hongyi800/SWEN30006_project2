@@ -22,18 +22,18 @@ public class SelectSmartStrategy implements ISelectStrategy{
 
     @Override
     public Card makeSelectStrategy(Hand hand, Hand originHand, Card currentWinCard, Whist.Suit trump) {
-
-        if(canWin(hand)){
+        this.winCard = currentWinCard;
+        this.trump = trump;
+        if(canWin(originHand)){
             //follow the rule and play the card
-            Card curHighest = hand.get(winCardPos);
-            Card cardToPlay = originHand.getCard(((Whist.Suit)curHighest.getSuit()),((Whist.Rank)curHighest.getRank()));
+            Card cardToPlay = originHand.get(winCardPos);
             return cardToPlay;
         }else{
             //break the rule
             int min = 0;
             for(int i=0;i<hand.getNumberOfCards();i++){
-                if(rankGreater(hand.get(i),hand.get(min))
-                        && !hand.get(i).getSuit().equals(winCard.getSuit())){
+                if(rankGreater(hand.get(min),hand.get(i))
+                        && !hand.get(i).getSuit().equals(currentWinCard.getSuit())){
                     min = i;
                 }
             }

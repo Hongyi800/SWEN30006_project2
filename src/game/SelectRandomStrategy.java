@@ -7,8 +7,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class SelectRandomStrategy implements ISelectStrategy {
 
-    public static final Random random = ThreadLocalRandom.current();
-    /*
+    public static final Random random = new Random(30006);
+/*
     if(seedProp == null) {
         // and no property
         // so randomise
@@ -18,11 +18,12 @@ public class SelectRandomStrategy implements ISelectStrategy {
         this.random = new Random(seed);
     }
 
-     */
+ */
 
     @Override
     public Card makeSelectStrategy(Hand hand, Hand originHand, Card currentWinCard, Whist.Suit trump) {
         // return random Card from Hand
+
         int x = random.nextInt(originHand.getNumberOfCards());
         return originHand.get(x);
     }
