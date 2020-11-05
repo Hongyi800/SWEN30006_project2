@@ -2,8 +2,6 @@ package game;
 
 import ch.aplu.jcardgame.*;
 
-import java.util.ArrayList;
-
 public class FilterNaiveLegalStrategy implements IFilterStrategy {
 
     private Hand hand;

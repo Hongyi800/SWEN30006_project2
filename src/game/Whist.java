@@ -55,7 +55,7 @@ public class Whist extends CardGame {
 	private Actor[] scoreActors = {null, null, null, null};
 	private final Location trickLocation = new Location(350, 350);
 	private final Location textLocation = new Location(350, 450);
-	private final int thinkingTime = 2000;
+	private final int thinkingTime = 2;
 	private Hand[] hands;
 	private Location hideLocation = new Location(-500, - 500);
 	private Location trumpsActorLocation = new Location(50, 50);
@@ -63,7 +63,7 @@ public class Whist extends CardGame {
 
 	private Player player;
 	// switch properties here
-	private PropertyReader propertyReader = new PropertyReader("smart.properties");
+	private PropertyReader propertyReader = new PropertyReader("whist.properties");
 	private Properties properties = propertyReader.setUpProperties();
 	private ArrayList<Player> players = propertyReader.getPlayers();
 
@@ -72,7 +72,6 @@ public class Whist extends CardGame {
 	public final int nbStartCards = Integer.parseInt(properties.getProperty("nbStartCards"));
 	public final int winningScore = Integer.parseInt(properties.getProperty("winningScore"));
 	public final String HUMAN = "interactive";
-
 
 	public final String SEED_PROP = properties.getProperty("Seed");
 
@@ -85,7 +84,6 @@ public class Whist extends CardGame {
 			random = new Random();
 		} else { // Use property seed
 			int seed = Integer.parseInt(SEED_PROP);
-			System.out.println("seed: "+seed);
 			random = new Random(seed);
 		}
 	}
@@ -114,27 +112,10 @@ public class Whist extends CardGame {
 
 	private Card selected;
 
-
-	public static void toRand(Hand deck, int i){
-
-		Card temp = deck.get(i);
-		deck.remove(i,false);
-		deck.insert(temp,false);
-	}
-
-	public static Hand shuffle(Hand deck) {
-		int length = deck.getNumberOfCards();
-		for ( int i = length; i > 0; i-- ){
-			int randInd = random.nextInt(i);
-			toRand(deck, randInd);
-		}
-		return deck;
-	}
-
-
 	private void initRound() {
 		setRandom();
-		Hand newDeck = shuffle(deck.toHand(false));
+		ShuffleDeck shuffleDeck = new ShuffleDeck(random);
+		Hand newDeck = shuffleDeck.shuffle(deck.toHand(false));
 		hands = new Hand[nbPlayers+1];
 		for(int p = 0; p < nbPlayers; ++p) {
 			hands[p] = new Hand(deck);
@@ -170,7 +151,7 @@ public class Whist extends CardGame {
 
 	private Optional<Integer> playRound() {  // Returns winner, if any
 		// Select and display trump suit
-		final Suit trumps = randomEnum(Suit.class); // TODO: add seed
+		final Suit trumps = randomEnum(Suit.class);
 		final Actor trumpsActor = new Actor("sprites/"+ trumpImage[trumps.ordinal()]);
 		addActor(trumpsActor, trumpsActorLocation);
 		// End trump suit
@@ -179,7 +160,6 @@ public class Whist extends CardGame {
 		Card winningCard = null;
 		Suit lead;
 
-		//TODO: add seed
 		int nextPlayer = random.nextInt(nbPlayers); // randomly select player to lead for this round
 
 		for (int i = 0; i < nbStartCards; i++) {
@@ -199,7 +179,7 @@ public class Whist extends CardGame {
 				delay(thinkingTime);
 
 				// select the card after selection and filter
-				selected = player.getSelected(null, trumps, hands[nextPlayer], winningCard);
+				selected = player.getSelected(null, trumps, hands[nextPlayer], winningCard, SEED_PROP);
 			}
 
 			// Lead with selected card
@@ -229,7 +209,7 @@ public class Whist extends CardGame {
 					player.addToHand(hands[nextPlayer]);
 					setStatusText("Player " + nextPlayer + " thinking...");
 					delay(thinkingTime);
-					selected = player.getSelected(lead, trumps, hands[nextPlayer], winningCard);
+					selected = player.getSelected(lead, trumps, hands[nextPlayer], winningCard, SEED_PROP);
 				}
 
 				// Follow with selected card

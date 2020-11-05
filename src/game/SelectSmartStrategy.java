@@ -21,7 +21,7 @@ public class SelectSmartStrategy implements ISelectStrategy{
     private int winCardPos = 0;
 
     @Override
-    public Card makeSelectStrategy(Hand hand, Hand originHand, Card currentWinCard, Whist.Suit trump) {
+    public Card makeSelectStrategy(Hand hand, Hand originHand, Card currentWinCard, Whist.Suit trump, String seedProp) {
         this.winCard = currentWinCard;
         this.trump = trump;
 
